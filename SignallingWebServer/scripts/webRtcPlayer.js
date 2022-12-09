@@ -75,10 +75,22 @@ function webRtcPlayer(parOptions) {
     }
 
     // Prefer SFU or P2P connection
-    this.preferSFU = urlParams.has('preferSFU');
+    //this.preferSFU = urlParams.has('preferSFU');
+
+     var eS = document.getElementById("codec-select");
+
+    if(eS.value == "VP8" )
+    {
+         this.preferSFU = true;
+    }
+
     console.log(this.preferSFU ? 
         "The browser will signal it would prefer an SFU connection. Remove ?preferSFU from the url to signal for P2P usage." :
         "The browser will signal for a P2P connection. Pass ?preferSFU in the url to signal for SFU usage.");
+
+    // The delay between the showing/unshowing of a freeze frame and when the stream will stop/start
+    // eg showing freeze frame -> delay -> stop stream OR show stream -> delay -> unshow freeze frame
+    this.freezeFrameDelay = 50; // ms
 
     // Latency tester
     this.latencyTestTimings = 
@@ -201,7 +213,7 @@ function webRtcPlayer(parOptions) {
             handleOnAudioTrack(e.streams[0]);
             return;
         }
-        else if(e.track.kind == "video")
+        else(e.track.kind == "video")
         {
             for (const s of e.streams) {
                 if (!self.availableVideoStreams.has(s.id)) {
